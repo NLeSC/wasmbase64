@@ -4,11 +4,11 @@
       {
         "label": "Build with Clang",
         "type": "shell",
-        "command": "clang",
+        "command": "clang-11",
         "args": [
-          "clean/base64_test.c",
+          "base64_encode_test.c",
           "-o",
-          "clean/base64_test.out",
+          "base64_encode_test.out",
           "--debug"
         ],
         "group": {

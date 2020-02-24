@@ -8,13 +8,13 @@
             "name": "clang build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/clean/base64_test.out",
+            "program": "${workspaceFolder}/base64_encode_test.out",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/clean",
+            "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
-            "MIMode": "lldb",
+            "MIMode": "gdb",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -23,7 +23,7 @@
                 }
             ],
             "preLaunchTask": "Build with Clang",
-            "miDebuggerPath": "/usr/bin/lldb"
+            "miDebuggerPath": "/usr/bin/gdb"
         }
     ]
 }
