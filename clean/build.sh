@@ -1,0 +1,1 @@
+clang --target=wasm32 -O3 -nostdlib -Wl,--no-entry -Wl,--export-all -o base64.wasm base64.c

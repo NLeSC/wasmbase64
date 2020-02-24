@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+
+
+	<body>
+		<h1> My first HTML file </h1>
+	</body>
+
+	<script  type="module" >
+		(async () => {
+			const r = fetch('b64.wasm');
+			const i = await WebAssembly.instantiateStreaming(r);
+			console.log(i);
+		})();
+	</script>
+</html>
