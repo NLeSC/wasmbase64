@@ -10,5 +10,4 @@ RUN sudo mkdir /opt/emsdk && sudo chown gitpod /opt/emsdk && \
     git clone https://github.com/emscripten-core/emsdk.git /opt/emsdk && \
     cd /opt/emsdk && \
     ./emsdk install latest && \
-    ./emsdk activate latest && \
-    source ./emsdk_env.sh
+    ./emsdk activate latest
