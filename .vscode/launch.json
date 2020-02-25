@@ -22,8 +22,30 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "Build tests",
+            "preLaunchTask": "Build base64_encode_test",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+            "name": "debug base64_decode_test",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/base64_decode_test",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build base64_decode_test",
             "miDebuggerPath": "/usr/bin/gdb"
         }
-    ]
+    ],
+
 }

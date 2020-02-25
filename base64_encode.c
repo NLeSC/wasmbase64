@@ -48,10 +48,6 @@ void base64(const void* mem, int len)
   
   int modulusLen = len % 3 ;
   int pad = ((modulusLen&1)<<1) + ((modulusLen&2)>>1) ; // 2 gives 1 and 1 gives 2, but 0 gives 0.
-  
-//   int flen = 4*(len + pad)/3 ;
-  
-  int flen = get_output_size(len);
 
   for( byteNo = 0 ; byteNo <= len-3 ; byteNo+=3 )
   {

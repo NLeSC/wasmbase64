@@ -1,23 +1,11 @@
-# the compiler to use
-CC = clang
+all: base64_encode_test base64_encode.wasm base64_decode.wasm
+test: base64_encode_test base64_decode_test
 
-# compiler flags:
-#  -g    adds debugging information to the executable file
-#  -Wall turns on most, but not all, compiler warnings
-CFLAGS  = -g -Wall
-  
-#files to link:
-# LFLAGS = -lcs50
-  
-# the name to use for both the target source file, and the output file:
-# TARGET = hello
+base64_encode_test: base64_encode_test.c ; clang-11 -g -Wall -o base64_encode_test base64_encode_test.c
+base64_encode.wasm: base64_encode.c ; clang-11 -Wall -fuse-ld=/usr/bin/wasm-ld-11 --target=wasm32 -O3 -nostdlib -Wl,--no-entry -Wl,--export-all -o base64_encode.wasm base64_encode.c
 
-
-all: base64_encode_test base64_encode.wasm
-test: base64_encode_test
-
-base64_encode_test: base64_encode_test.c ; $(CC) $(CFLAGS) -o base64_encode_test base64_encode_test.c $(LFLAGS)
-base64_encode.wasm: base64_encode.c ; clang-11 -fuse-ld=/usr/bin/wasm-ld-11 --target=wasm32 -O3 -nostdlib -Wl,--no-entry -Wl,--export-all -o base64_encode.wasm base64_encode.c
+base64_decode_test: base64_decode_test.c ; clang-11 -g -Wall -o base64_decode_test base64_decode_test.c
+base64_decode.wasm: base64_decode.c ; clang-11 -Wall -fuse-ld=/usr/bin/wasm-ld-11 --target=wasm32 -O3 -nostdlib -Wl,--no-entry -Wl,--export-all -o base64_decode.wasm base64_decode.c
 
 clean:
-	rm base64_encode base64_encode.wasm || true
+	rm base64_decode_test base64_decode.wasm base64_encode_test base64_encode.wasm || true

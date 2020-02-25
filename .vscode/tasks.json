@@ -2,6 +2,34 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Build base64_decode_test",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "clean",
+                "base64_decode_test"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build base64_encode_test",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "clean",
+                "base64_encode_test"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Build tests",
             "type": "shell",
             "command": "make",
@@ -16,12 +44,13 @@
             "problemMatcher": []
         },
         {
-            "label": "Build wasm",
+            "label": "Build .wasm files",
             "type": "shell",
             "command": "make",
             "args": [
                 "clean",
-                "base64_encode.wasm"
+                "base64_encode.wasm",
+                "base64_decode.wasm"
             ],
             "group": {
                 "kind": "build",
