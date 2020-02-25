@@ -6,7 +6,7 @@
 #include <string.h>
 
 
-const static char* b64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" ;
+
 
 // maps A=>0,B=>1..
 const static unsigned char unb64[]={
@@ -52,16 +52,16 @@ void printmem(void* from, int len) {
 }
 
 int main() {
-    int len = 100000;
-    char* mem = malloc((int)(64 + 256 + len*2.4));
-    memcpy(mem, b64, 64);
-    memcpy(mem + 64, unb64, 256);
-    char str[100000] = "testj";
-    memcpy(mem+64+256, str, len);
-    printmem(mem, 256+64 + 6);
+    char input[] = "this is a test";
+    int input_length = strlen(input);
 
-    int l = base64(mem, mem + 256 + 64, len);
-    // unbase64(mem + len, l);
-    // printmem(mem, 2*len + l);
+    int output_size = get_output_size(input_length);
+    char* mem = malloc(input_length + output_size);
+   
+    memcpy(mem, input, input_length);
+    base64(mem, input_length);
+
+    printmem(mem + input_length, output_size);
+
     return 0;
 }

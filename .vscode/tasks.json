@@ -6,7 +6,22 @@
             "type": "shell",
             "command": "make",
             "args": [
+                "clean",
                 "test"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build wasm",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "clean",
+                "base64_encode.wasm"
             ],
             "group": {
                 "kind": "build",
