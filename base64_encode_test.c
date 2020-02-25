@@ -1,4 +1,4 @@
-#include "base64_encode.c";
+#include "base64_encode.c"
 
 
 #include <stdio.h>
@@ -51,7 +51,7 @@ void printmem(void* from, int len) {
     free(res);
 }
 
-void main() {
+int main() {
     int len = 100000;
     char* mem = malloc((int)(64 + 256 + len*2.4));
     memcpy(mem, b64, 64);
@@ -63,4 +63,5 @@ void main() {
     int l = base64(mem, mem + 256 + 64, len);
     // unbase64(mem + len, l);
     // printmem(mem, 2*len + l);
+    return 0;
 }

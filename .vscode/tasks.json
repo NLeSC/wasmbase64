@@ -1,20 +1,18 @@
 {
     "version": "2.0.0",
     "tasks": [
-      {
-        "label": "Build with Clang",
-        "type": "shell",
-        "command": "clang-11",
-        "args": [
-          "base64_encode_test.c",
-          "-o",
-          "base64_encode_test.out",
-          "--debug"
-        ],
-        "group": {
-          "kind": "build",
-          "isDefault": true
+        {
+            "label": "Build tests",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "test"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
         }
-      }
     ]
-  }
+}

@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "clang build and debug active file",
+            "name": "debug base64_encode_test",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/base64_encode_test.out",
+            "program": "${workspaceFolder}/base64_encode_test",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -22,7 +22,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "Build with Clang",
+            "preLaunchTask": "Build tests",
             "miDebuggerPath": "/usr/bin/gdb"
         }
     ]
