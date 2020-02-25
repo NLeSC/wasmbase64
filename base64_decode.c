@@ -61,11 +61,11 @@ int get_output_size(const char* input, int input_size) {
   }
   if( input[ input_size-1 ]=='=' )  ++pad ;
   if( input[ input_size-2 ]=='=' )  ++pad ;
-  return 3*input_size/4 - pad ;
+  return 3*input_size/4 - pad;
 }
 
 // Converts binary data of length=len to base64 characters.
-int unbase64(const void* ascii, int len)
+void unbase64(const void* ascii, int len)
 {
   const unsigned char *safeAsciiPtr = (const unsigned char*)ascii ;
   unsigned char * bin =  (unsigned char *) ascii + len;
@@ -74,13 +74,11 @@ int unbase64(const void* ascii, int len)
   int charNo;
   int pad = 0 ;
   if( len < 2 ) { // 2 accesses below would be OOB.
-    return 0;
+    return;
   }
   if( safeAsciiPtr[ len-1 ]=='=' )  ++pad ;
   if( safeAsciiPtr[ len-2 ]=='=' )  ++pad ;
-  
-  int flen = 3*len/4 - pad ;
-  
+    
   for( charNo=0; charNo <= len - 4 - pad ; charNo+=4 )
   {
     int A=unb64[safeAsciiPtr[charNo]];
@@ -109,7 +107,5 @@ int unbase64(const void* ascii, int len)
     
     bin[cb++] = (A<<2) | (B>>4) ;
   }
-  
-  return flen ;
 }
 
