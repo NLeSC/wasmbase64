@@ -25,7 +25,7 @@
 
 const static char* b64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" ;
 
-int get_output_size(int input_size) {
+int get_output_size(const int input_size) {
   int modulusLen = input_size % 3 ;
   int pad = ((modulusLen&1)<<1) + ((modulusLen&2)>>1) ; // 2 gives 1 and 1 gives 2, but 0 gives 0.
   return 4*(input_size + pad)/3 ;
