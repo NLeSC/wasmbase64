@@ -3,7 +3,7 @@ FROM gitpod/workspace-full
 USER gitpod
 
 RUN sudo apt-get -q update && \
-    sudo apt-get install -yq build-essential clang-11 lldb clangd-11 && \
+    sudo apt-get install -yq build-essential clang-11 lldb clangd-11 lld-11 wabt && \
     sudo rm -rf /var/lib/apt/lists/* &&\
     sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-11 100 &&\
     sudo update-alternatives --install /usr/bin/wasm-ld wasm-ld /usr/bin/wasm-ld-11 100 &&\

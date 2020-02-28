@@ -1,5 +1,7 @@
-base64_encode_test
+backup/base64_encode_test
 base64_decode_test
-base64_decode.wasm
-base64_encode.wasm
+backup/base64_decode.wasm
+backup/base64_encode.wasm
 core.wasm-ld-*
+.idea
+src/out/*

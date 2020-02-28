@@ -18,7 +18,7 @@ int main() {
 
         char * output = malloc(output_size + 1);
         memcpy(output, mem+input_length, output_size);
-        output[output_size - 1] = 0;
+	output[output_size] = 0;
         if (strcmp(output, expected_output) == 0) {
             puts("test ok");
         } else {

@@ -54,6 +54,10 @@ const static unsigned char unb64[]={
   0,   0,   0,   0,   0,   0, 
 }; // This array has 256 elements
 
+
+#define EXPORT __attribute__((visibility("default")))
+
+EXPORT
 int get_output_size(const char* input, int input_size) {
   int pad = 0 ;
   if( input_size < 2 ) { // 2 accesses below would be OOB.
@@ -65,6 +69,7 @@ int get_output_size(const char* input, int input_size) {
 }
 
 // Converts binary data of length=len to base64 characters.
+EXPORT
 void unbase64(const void* ascii, int len)
 {
   const unsigned char *safeAsciiPtr = (const unsigned char*)ascii ;

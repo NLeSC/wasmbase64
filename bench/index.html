@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+	<body></body>
+	<script src="https://cdn.jsdelivr.net/npm/js-base64@2.5.2/base64.js"></script>
+	<script type="module">
+		import * as wasm from '../dist/base64.mjs';
+		import * as ab from './base64ab.mjs';
+
+		// ok, not really random.
+		const randomBuffer = (size) => {
+			const a = new Uint8Array(size);
+			for (let i = 0; i< size; i++) {
+				a[i] = i;
+			}
+			return a;
+		};
+
+		const log = (...objs) => {
+			const elm = document.createElement('pre');
+			elm.innerText = JSON.stringify(objs, undefined, 2);
+			document.body.appendChild(elm);
+		};
+
+		const str2ab = (inputStr) => {
+			const t = new TextEncoder();
+			return t.encode(inputStr);
+		};
+
+		// https://stackoverflow.com/a/20604561/2557720
+		const ab2str = (buffer) => {
+			let bufView = new Uint16Array(buffer);
+			let length = bufView.length;
+			let result = '';
+			let addition = Math.pow(2,16)-1;
+
+			for(let i = 0;i<length;i+=addition){
+				if(i + addition > length){
+					addition = length - i;
+				}
+				result += String.fromCharCode.apply(null, bufView.subarray(i,i+addition));
+			}
+
+			return result;
+		};
+
+		const run = async() => {
+			const wasmEncoder = new wasm.Base64Encoder();
+			await wasmEncoder.init();
+			const wasmDecoder = new wasm.Base64Decoder();
+			await wasmDecoder.init();
+
+			const bWasmEncode = async(input) => wasmEncoder.encode(input);
+			const bWasmDecode = async(input) => wasmDecoder.decode(input);
+			const abEncode = async(input) => ab.encode(input);
+			const abDecode = async(input) => ab.decode(input);
+			const nativeEncode = async(input) => btoa(input);
+			const nativeDecode = async(input) => atob(input);
+			const jsbase64Encode = async(input) => Base64.encode(input);
+			const jsbase64Decode = async(input) => Base64.decode(input);
+
+			const encodeResults = {};
+			const tester = async (alg, input, repeat=10) => {
+				let t0 = window.performance.now();
+				for (let i=0; i<repeat; i++) {
+					await alg(input);
+				}
+				return (window.performance.now() - t0).toFixed(1);
+			};
+
+			for (let bufferSize of [100, 10000, 1e6]) {
+				const buffer = randomBuffer(Math.floor(bufferSize));
+				const bufferString = ab2str(buffer);
+
+				encodeResults[bufferSize] = {
+					wasm: await tester(bWasmEncode, buffer),
+					ab: await tester(abEncode, buffer),
+					native: await tester(nativeEncode, bufferString),
+					jsbase64: await tester(jsbase64Encode, bufferString),
+				}
+			}
+			log(encodeResults);
+
+			const decodeResults = {};
+
+			for (let bufferSize of [100, 10000, 1e6]) {
+				const rawBuffer = randomBuffer(Math.floor(bufferSize));
+				const buffer = wasmEncoder.encode(rawBuffer);
+				const bufferString = ab2str(buffer);
+
+				decodeResults[bufferSize] = {
+					wasm: await tester(bWasmDecode, buffer),
+					ab: await tester(abDecode, bufferString),
+					native: await tester(nativeDecode, bufferString),
+					jsbase64: await tester(jsbase64Decode, bufferString),
+				}
+			}
+
+			log(decodeResults);
+
+		};
+
+		run();
+
+
+		// 	t0 = window.performance.now();
+		// 	await base64Encode(a);
+		// 	console.log('a', window.performance.now() - t0);
+
+		// 	t0 = window.performance.now();
+		// 	encode(a);
+		// 	console.log('b', window.performance.now() - t0);
+
+		// 	const astr = ab2str(a);
+		// 	t0 = window.performance.now();
+		// 	btoa(astr);
+		// 	console.log('c', window.performance.now() - t0);
+
+		// }
+		// boot();
+			
+	</script>
+</html>

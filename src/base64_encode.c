@@ -23,8 +23,11 @@
   YWxsIHlvdXIgYmFzZSBhcmUgYmVsb25nIHRvIHVz
 */
 
+#define EXPORT __attribute__((visibility("default")))
+
 const static char* b64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" ;
 
+EXPORT
 int get_output_size(const int input_size) {
   int modulusLen = input_size % 3 ;
   int pad = ((modulusLen&1)<<1) + ((modulusLen&2)>>1) ; // 2 gives 1 and 1 gives 2, but 0 gives 0.
@@ -32,6 +35,7 @@ int get_output_size(const int input_size) {
 }
 
 // Converts binary data of length=len to base64 characters.
+EXPORT
 void base64(const void* mem, int len)
 {
   // input expected at mem, output should be written to mem+len.
