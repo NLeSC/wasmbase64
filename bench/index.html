@@ -68,7 +68,7 @@
 				return (window.performance.now() - t0).toFixed(1);
 			};
 
-			for (let bufferSize of [100, 10000, 1e6]) {
+			for (let bufferSize of [10, 10000, 1e7]) {
 				const buffer = randomBuffer(Math.floor(bufferSize));
 				const bufferString = ab2str(buffer);
 
@@ -83,7 +83,7 @@
 
 			const decodeResults = {};
 
-			for (let bufferSize of [100, 10000, 1e6]) {
+			for (let bufferSize of [10, 10000, 1e7]) {
 				const rawBuffer = randomBuffer(Math.floor(bufferSize));
 				const buffer = wasmEncoder.encode(rawBuffer);
 				const bufferString = ab2str(buffer);

@@ -1,5 +1,140 @@
-## Build
+# Webassembly based base64 encoder/decoder for Javascript
 
-```shell
-docker build -t wasmbase64 -f .gitpod.Dockerfile .
+
+## Build requirements
+- `build-essential`
+- `clang-11`
+- `lldb`
+- `clangd-11`
+- `lld-11 wabt`
+
+## Build:
 ```
+make
+```
+
+## Performance benchmark
+There is an interesting story here. Native `window.btoa` and `window.atob` work on 'binary strings',
+which are quite annoying to work with.
+
+Modern JS has `ArrayBuffer` to work with binary data, which is much nicer, but conversion
+to/from the binary string format is still very confusing. Try googling [arraybuffer to binary string](https://www.google.com/search?q=arraybuffer+to+binary+string).
+
+This library uses `ArrayBuffer` only (there is `encodeString` and `decodeString`) though.
+
+To try a fair comparison we're comparing encoders/decoders that work with binary strings
+directly on binary strings - conversion to/from `ArrayBuffer` will have some overhead which 
+is not included in the results.
+
+Comparing:
+
+- `wasm`: This implementation
+- `ab`: https://github.com/niklasvh/base64-arraybuffer
+- `native`: `window.btoa`, `window.atob`
+- `jsbase64`: https://github.com/dankogai/js-base64
+
+### Results
+- Dict index is the size of the ArrayBuffer in bytes (10B, 10kB, 10MB).
+- Time is the total time in milliseconds of running each implementation 10 times.
+
+Chrome/encode.
+```json
+{
+    "10": {
+      "wasm": "0.2",
+      "ab": "0.2",
+      "native": "0.1",
+      "jsbase64": "0.2"
+    },
+    "10000": {
+      "wasm": "1.2",
+      "ab": "18.4",
+      "native": "0.3",
+      "jsbase64": "13.1"
+    },
+    "10000000": {
+      "wasm": "216.4",
+      "ab": "17073.0",
+      "native": "371.3",
+      "jsbase64": "9826.1"
+    }
+}
+```
+Chrome/decode
+```json
+{
+    "10": {
+      "wasm": "0.2",
+      "ab": "0.2",
+      "native": "0.1",
+      "jsbase64": "0.2"
+    },
+    "10000": {
+      "wasm": "0.2",
+      "ab": "11.5",
+      "native": "1.1",
+      "jsbase64": "1.4"
+    },
+    "10000000": {
+      "wasm": "213.1",
+      "ab": "632.4",
+      "native": "871.7",
+      "jsbase64": "1355.6"
+    }
+}
+```
+
+Firefox/encode
+```json
+{
+    "10": {
+      "wasm": "2.0",
+      "ab": "0.0",
+      "native": "0.0",
+      "jsbase64": "0.0"
+    },
+    "10000": {
+      "wasm": "0.0",
+      "ab": "7.0",
+      "native": "0.0",
+      "jsbase64": "12.0"
+    },
+    "10000000": {
+      "wasm": "218.0",
+      "ab": "4632.0",
+      "native": "585.0",
+      "jsbase64": "6215.0"
+    }
+}
+```
+
+```json
+{
+    "10": {
+      "wasm": "1.0",
+      "ab": "1.0",
+      "native": "0.0",
+      "jsbase64": "0.0"
+    },
+    "10000": {
+      "wasm": "0.0",
+      "ab": "3.0",
+      "native": "0.0",
+      "jsbase64": "2.0"
+    },
+    "10000000": {
+      "wasm": "186.0",
+      "ab": "640.0",
+      "native": "949.0",
+      "jsbase64": "1679.0"
+    }
+}
+```
+
+## Note
+- Original C implementation from https://github.com/superwills/NibbleAndAHalf
+
+## Todo
+- input/error handling
+- add tests
+- publish to npm
