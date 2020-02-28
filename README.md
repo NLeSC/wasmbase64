@@ -1,4 +1,4 @@
-# Webassembly based base64 encoder/decoder for Javascript
+# Webassembly base64 encoder/decoder for Javascript
 
 ## How to use
 Currently only exported as [base64.mjs](https://rawcdn.githack.com/NLeSC/wasmbase64/2e96082440cb78832465e8d6314c0a9ba0072897/dist/base64.mjs) (see [JS Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)).
