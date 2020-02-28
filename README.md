@@ -1,5 +1,37 @@
 # Webassembly based base64 encoder/decoder for Javascript
 
+## How to use
+Currently only exported as [base64.mjs](https://rawcdn.githack.com/NLeSC/wasmbase64/2e96082440cb78832465e8d6314c0a9ba0072897/dist/base64.mjs) (see [JS Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)).
+
+Converts to/from `ArrayBuffer`.
+
+Example:
+
+```html
+<script type="module">
+    import {Base64Decoder, Base64Encoder} from 'https://rawcdn.githack.com/NLeSC/wasmbase64/2e96082440cb78832465e8d6314c0a9ba0072897/dist/base64.mjs';
+    
+    // not really random.
+    const randomBuffer = (size) => {
+        const a = new Uint8Array(size);
+        for (let i = 0; i< size; i++) {
+            a[i] = i;
+        }
+        return a;
+    };
+
+    // init() (async) must be called first
+    const encoder = new Base64Encoder();
+    encoder.init().then(() => {
+       const result_uint8 = encoder.encode(randomBuffer(1000));
+       console.log(result_uint8);
+    });
+</script>
+```
+
+## Memory
+Note that memory is not immediately released after encoding/decoding. It should be released when the instance is
+garbage collected when it goes out of scope.
 
 ## Build requirements
 - `build-essential`
