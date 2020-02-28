@@ -12,19 +12,6 @@ export class Base64Decoder {
       this.instance = null;
     };
 
-    decodedLength(input) {
-        let pad = 0 ;
-        const inputSize = input.byteLength;
-        const inputUint8 = new Uint8Array(input);
-        if( inputSize < 2 ) { // 2 accesses below would be OOB.
-            return 0;
-        }
-        // String.fromCharCode(61) === "="
-        if( inputUint8[ inputSize-1 ] === 61 ) ++pad ;
-        if( inputUint8[ inputSize-2 ] === 61 ) ++pad ;
-        return 3*inputSize/4 - pad;
-    }
-
     async init () {
         if (!decodeWasmModule) {
             decodeWasmModule = await WebAssembly.compile(decodeWasmCode);
@@ -34,22 +21,23 @@ export class Base64Decoder {
         }
     }
 
-    decode (inputBuffer) {
-        if (!this.instance) { throw new Error("Please call .init() first."); }
-        const heapBase = this.instance.exports.__heap_base.value
-        const decodedLength = this.decodedLength(inputBuffer);
-
-        // ensure there is enough memory
-        const requiredMemory = heapBase + inputBuffer.byteLength + decodedLength;
+    growMemory(requiredMemory) {
         const requiredPages = Math.ceil(requiredMemory / PAGE_SIZE);
         const currentPages = this.instance.exports.memory.buffer.byteLength / PAGE_SIZE;
         if (requiredPages > currentPages) {
             this.instance.exports.memory.grow(requiredPages - currentPages);
         }
+    }
 
-        const membuf = new Uint8Array(this.instance.exports.memory.buffer, heapBase);
-
+    decode (inputBuffer) {
+        if (!this.instance) { throw new Error("Please call .init() first."); }
+        const heapBase = this.instance.exports.__heap_base.value;
+        this.growMemory(heapBase + inputBuffer.byteLength);
+        let membuf = new Uint8Array(this.instance.exports.memory.buffer, heapBase);
         membuf.set(inputBuffer);
+        const decodedLength = this.instance.exports.get_output_size(heapBase, inputBuffer.byteLength);
+        this.growMemory(heapBase + inputBuffer.byteLength + decodedLength);
+        membuf = new Uint8Array(this.instance.exports.memory.buffer, heapBase);
         this.instance.exports.unbase64(heapBase, inputBuffer.byteLength);
         return membuf.slice(inputBuffer.byteLength, inputBuffer.byteLength + decodedLength);
     }
@@ -68,13 +56,6 @@ export class Base64Encoder {
       this.instance = null;
     };
 
-    encodedLength(inputLength) {
-        const modulusLen = inputLength % 3 ;
-        const pad = ((modulusLen&1)<<1) + ((modulusLen&2)>>1);
-        const encLength = 4*(inputLength + pad)/3 ;
-        return encLength;
-    }
-
     async init () {
         if (!encodeWasmCode) {
             const decoder = new Base64Decoder();
@@ -89,22 +70,23 @@ export class Base64Encoder {
         }
     }
 
-    encode (inputBuffer) {
-        if (!this.instance) { throw new Error("Please call .init() first."); }
-        const heapBase = this.instance.exports.__heap_base.value
-        const encodedLength = this.encodedLength(inputBuffer.byteLength);
-
-        // ensure there is enough memory
-        const requiredMemory = heapBase + inputBuffer.byteLength + encodedLength;
+    growMemory(requiredMemory) {
         const requiredPages = Math.ceil(requiredMemory / PAGE_SIZE);
         const currentPages = this.instance.exports.memory.buffer.byteLength / PAGE_SIZE;
         if (requiredPages > currentPages) {
             this.instance.exports.memory.grow(requiredPages - currentPages);
         }
+    }
 
-        const membuf = new Uint8Array(this.instance.exports.memory.buffer, heapBase);
-
+    encode (inputBuffer) {
+        if (!this.instance) { throw new Error("Please call .init() first."); }
+        const heapBase = this.instance.exports.__heap_base.value;
+        this.growMemory(heapBase + inputBuffer.byteLength);
+        let membuf = new Uint8Array(this.instance.exports.memory.buffer, heapBase);
         membuf.set(inputBuffer);
+        const encodedLength = this.instance.exports.get_output_size(inputBuffer.byteLength);
+        this.growMemory(heapBase + inputBuffer.byteLength + encodedLength);
+        membuf = new Uint8Array(this.instance.exports.memory.buffer, heapBase);
         this.instance.exports.base64(heapBase, inputBuffer.byteLength);
         return membuf.slice(inputBuffer.byteLength, inputBuffer.byteLength + encodedLength);
     }

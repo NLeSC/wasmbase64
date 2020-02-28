@@ -4,6 +4,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/js-base64@2.5.2/base64.js"></script>
 	<script type="module">
 		import * as wasm from '../dist/base64.mjs';
+		window.wasm = wasm;
 		import * as ab from './base64ab.mjs';
 
 		// ok, not really random.
