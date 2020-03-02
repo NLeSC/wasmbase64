@@ -65,6 +65,11 @@ Comparing:
 - `native`: `window.btoa`, `window.atob`
 - `jsbase64`: https://github.com/dankogai/js-base64
 
+Machine:
+
+- Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz
+- Linux 5.3.0-3-amd64 #1 SMP Debian 5.3.15-1 (2019-12-07) x86_64 GNU/Linux
+
 ### Results
 - Dict index is the size of the ArrayBuffer in bytes (10B, 10kB, 10MB).
 - Time is the total time in milliseconds of running each implementation 10 times.
